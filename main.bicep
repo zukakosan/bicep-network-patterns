@@ -45,7 +45,9 @@ resource vpnCloudVNet 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         name: 'Subnet-1'
         properties: {
           addressPrefix: '10.0.1.0/24'
-          networkSecurityGroup: defaultNSG
+          networkSecurityGroup: {
+            id: defaultNSG.id
+          }
         }
       }
     ]
@@ -80,7 +82,9 @@ resource vpnOnpVNet 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         name: 'Subnet-1'
         properties: {
           addressPrefix: '10.100.1.0/24'
-          networkSecurityGroup: defaultNSG
+          networkSecurityGroup: {
+            id: defaultNSG.id
+          }
         }
       }
     ]
@@ -135,6 +139,9 @@ resource vpngwCloud 'Microsoft.Network/virtualNetworkGateways@2020-11-01' = {
   name: '${vpnCloudVNet.name}-gw'
   location: location
   properties: {
+    bgpSettings: {
+      asn: 65010
+    }
     ipConfigurations: [
       {
         name: '${vpnCloudVNet.name}-gw-ipconfig'
@@ -165,6 +172,9 @@ resource vpngwOnp 'Microsoft.Network/virtualNetworkGateways@2020-11-01' = {
   name: '${vpnOnpVNet.name}-gw'
   location: location
   properties: {
+    bgpSettings: {
+      asn: 65020
+    }
     ipConfigurations: [
       {
         name: '${vpnOnpVNet.name}-gw-ipconfig'
